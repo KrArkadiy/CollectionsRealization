@@ -117,7 +117,7 @@ public class ArrayList<T> implements List<T>{
 
     private void resize(){
         T[] newArray = (T[]) Array.newInstance(this.cls, array.length * 2);
-        System.arraycopy(array,0, newArray,0, index);
+        System.arraycopy(array, 0, newArray, 0, index);
         array = newArray;
     }
 
