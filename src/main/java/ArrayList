@@ -1,89 +1,73 @@
-import java.lang.reflect.Array;
 
-public class ArrayList<T> implements List<T>{
+import java.util.NoSuchElementException;
 
-    private int capacity;
+public class ArrayList<T> implements List<T> {
+
+    private final int INITIAL_CAPACITY = 10;
 
     private int size;
 
-    private int initialCapacity = 10;
+    private Object[] array;
 
-    private T[] array;
 
-    private int index = 0;
+    public ArrayList() {
 
-    private Class<T> cls;
-
-    public ArrayList(Class<T> cls){
-        this.cls = cls;
-        array = (T[]) Array.newInstance(this.cls, initialCapacity);
-        capacity = array.length;
+        array = new Object[INITIAL_CAPACITY];
+        size = 0;
     }
 
     @Override
-    public void add(T e) {
-        if (index == array.length-1){
-            resize();
-        }
-        array[index++] = e;
-        size++;
+    public void add(T value) {
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == size && index != 0) {
-            add(value);
-            return;
+        isCorrectIndex(index);
+        if (isFull()) {
+            resize();
         }
-        if (index >= 0 && index <= size) {
-            if (isFull()) {
-                resize();
-            }
-            if (size == 1 && index == 0) {
-                T temp = array[index];
-                array[index] = value;
-                array[index + 1] = temp;
-                size++;
-            } else {
-                for (int i = size; i > index - 1; i--) {
-                    array[i + 1] = array[i];
-                }
-                array[index] = value;
-                size++;
-            }
+        if (index == size - 1) {
+            T temp = (T) array[index];
+            array[index] = value;
+            array[index + 1] = temp;
+        } else {
+            System.arraycopy(array, index, array, index + 1, size - index);
+            array[index] = value;
         }
+        size++;
     }
 
     @Override
     public void clear() {
-        for (int i = 0; i < array.length; i++){
-            array[i] = null;
-        }
+        Object[] cleanArray = new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public T get(int index) {
-        return  array[index];
+        isCorrectIndex(index);
+        return (T) array[index];
     }
 
 
     @Override
     public int indexOf(T e) {
         for (int i = 0; i < array.length; i++) {
-            if (array[i].equals(e)) {
+            if (array[i] == null) {
+                return i;
+            } else if (array[i].equals(e)) {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 
     @Override
     public T remove(int index) {
-        T removedValue = array[index];
-        array[index] = null;
-        for (int i = index+1; i < size; i++) {
-            array[i-1] = array[i];
-        }
+        isCorrectIndex(index);
+        T removedValue = (T) array[index];
+        System.arraycopy(array, index, array, index, size - index - 1);
+        size--;
         return removedValue;
     }
 
@@ -91,23 +75,21 @@ public class ArrayList<T> implements List<T>{
     public T remove(T value) {
         T removedValue;
         for (int i = 0; i < size; i++) {
-            if (array[i].equals(value)) {
-                removedValue = (T) array[i];
-                array[i] = null;
-                return removedValue;
-            }
-            for (int j = index+1; j < size; j++) {
-                array[i-1] = array[i];
+            if (array[i] == null) {
+                return remove(i);
+            } else if (array[i].equals(value)) {
+                return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException(String.format("Element %s not found.", value));
     }
 
     @Override
     public T set(T e, int index) {
-        T oldValue = array[index];
+        isCorrectIndex(index);
+        T oldValue = (T) array[index];
         array[index] = e;
-        return array[index];
+        return (T) array[index];
     }
 
     @Override
@@ -115,17 +97,24 @@ public class ArrayList<T> implements List<T>{
         return size;
     }
 
-    private void resize(){
-        T[] newArray = (T[]) Array.newInstance(this.cls, array.length * 2);
-        System.arraycopy(array,0, newArray,0, index);
+    private void resize() {
+        Object[] newArray = new Object[array.length * 2];
+        System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
-    private boolean isFull(){
-        return size == array.length -1;
+    private boolean isFull() {
+        return size == array.length - 1;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index >= size + 1) {
+            System.out.printf("Incorrect index %d%n", index);
+            throw new IndexOutOfBoundsException();
+        }
     }
 }
