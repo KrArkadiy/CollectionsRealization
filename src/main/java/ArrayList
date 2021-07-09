@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] array;
 
-
     public ArrayList() {
 
         array = new Object[INITIAL_CAPACITY];
@@ -113,8 +112,7 @@ public class ArrayList<T> implements List<T> {
 
     private void isCorrectIndex(int index) {
         if (index < 0 || index >= size + 1) {
-            System.out.printf("Incorrect index %d%n", index);
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(String.format("Incorrect index %d%n", index));
         }
     }
 }
