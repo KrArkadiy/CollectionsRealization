@@ -1,0 +1,120 @@
+
+import java.util.NoSuchElementException;
+
+public class ArrayList<T> implements List<T> {
+
+    private final int INITIAL_CAPACITY = 10;
+
+    private int size;
+
+    private Object[] array;
+
+
+    public ArrayList() {
+
+        array = new Object[INITIAL_CAPACITY];
+        size = 0;
+    }
+
+    @Override
+    public void add(T value) {
+        add(value, size);
+    }
+
+    @Override
+    public void add(T value, int index) {
+        isCorrectIndex(index);
+        if (isFull()) {
+            resize();
+        }
+        if (index == size - 1) {
+            T temp = (T) array[index];
+            array[index] = value;
+            array[index + 1] = temp;
+        } else {
+            System.arraycopy(array, index, array, index + 1, size - index);
+            array[index] = value;
+        }
+        size++;
+    }
+
+    @Override
+    public void clear() {
+        Object[] cleanArray = new Object[INITIAL_CAPACITY];
+    }
+
+    @Override
+    public T get(int index) {
+        isCorrectIndex(index);
+        return (T) array[index];
+    }
+
+
+    @Override
+    public int indexOf(T e) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == null) {
+                return i;
+            } else if (array[i].equals(e)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public T remove(int index) {
+        isCorrectIndex(index);
+        T removedValue = (T) array[index];
+        System.arraycopy(array, index, array, index, size - index - 1);
+        size--;
+        return removedValue;
+    }
+
+    @Override
+    public T remove(T value) {
+        T removedValue;
+        for (int i = 0; i < size; i++) {
+            if (array[i] == null) {
+                return remove(i);
+            } else if (array[i].equals(value)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException(String.format("Element %s not found.", value));
+    }
+
+    @Override
+    public T set(T e, int index) {
+        isCorrectIndex(index);
+        T oldValue = (T) array[index];
+        array[index] = e;
+        return (T) array[index];
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    private void resize() {
+        Object[] newArray = new Object[array.length * 2];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        array = newArray;
+    }
+
+    private boolean isFull() {
+        return size == array.length - 1;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index >= size + 1) {
+            System.out.printf("Incorrect index %d%n", index);
+            throw new IndexOutOfBoundsException();
+        }
+    }
+}
