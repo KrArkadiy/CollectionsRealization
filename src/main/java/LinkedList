@@ -1,0 +1,166 @@
+import java.util.NoSuchElementException;
+
+public class LinkedList<T> implements List<T> {
+
+    private int size;
+
+    private Node<T> first;
+
+    private Node<T> last;
+
+    public LinkedList() {
+        size = 0;
+    }
+
+    private static class Node<T> {
+        Node<T> prev;
+        T item;
+        Node<T> next;
+
+        Node(Node<T> prev, T item, Node<T> next) {
+            this.item = item;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
+    @Override
+    public void add(T e) {
+        Node<T> l = last;
+        Node<T> newNode = new Node<>(l, e, null);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        size++;
+    }
+
+    @Override
+    public void add(T e, int index) {
+        isCorrectIndex(index);
+        Node<T> temp = new Node<>(null, e, null);
+        if (index == size) {
+            temp.prev = last;
+            last.next = temp;
+            last = temp;
+        } else if (index == 0) {
+            temp.next = first;
+            first.prev = temp;
+            last = temp;
+        } else if (size == 0) {
+            add(e);
+        } else {
+            Node<T> nodeByIndex = getNode(index);
+            temp.prev = nodeByIndex.prev;
+            temp.next = nodeByIndex;
+            nodeByIndex.prev = temp;
+            temp.prev.next = temp;
+        }
+        size++;
+    }
+
+    @Override
+    public void clear() {
+        for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
+            tNode.item = null;
+            tNode.next = null;
+            tNode.prev = null;
+        }
+        first = last = null;
+        size = 0;
+    }
+
+    @Override
+    public T get(int index) {
+        isCorrectIndex(index);
+        return getNode(index).item;
+    }
+
+    @Override
+    public int indexOf(T e) {
+        int index = 0;
+        if (e == null) {
+            for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
+                if (tNode.item == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
+                if (tNode.item.equals(e)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public T remove(int index) {
+        Node<T> temp = getNode(index);
+        if (size == 1) {
+            first = null;
+            last = null;
+        } else if (index == 0) {
+            first.next.prev = null;
+            first = first.next;
+        } else if (index == size - 1) {
+            last.prev.next = null;
+            last = last.prev;
+        } else {
+            temp.prev.next = temp.next;
+            temp.next.prev = temp.prev;
+        }
+        size--;
+        return temp.item;
+    }
+
+    @Override
+    public T remove(T e) {
+        for (int i = 0; i < size; i++) {
+            if (getNode(i).item == e || (e != null && e.equals(getNode(i).item))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException(String.format("No %s not found.", e));
+    }
+
+    @Override
+    public T set(T e, int index) {
+        Node<T> temp = getNode(index);
+        T tempValue = temp.item;
+        temp.item = e;
+        return tempValue;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    private void isCorrectIndex(int index) {
+        if (index < 0 || index > size + 1) {
+            throw new IndexOutOfBoundsException(String.format("Index %d is incorrect", index));
+        }
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private Node<T> getNode(int index) {
+        isCorrectIndex(index);
+        if (size - 1 == index) {
+            return last;
+        }
+        Node<T> temp = first;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+        }
+        return temp;
+    }
+}
