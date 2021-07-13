@@ -126,7 +126,7 @@ public class LinkedList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(String.format("No %s not found.", e));
+        throw new NoSuchElementException(String.format("%s not found.", e));
     }
 
     @Override
@@ -134,7 +134,7 @@ public class LinkedList<T> implements List<T> {
         Node<T> temp = getNode(index);
         T tempValue = temp.item;
         temp.item = e;
-        return tempValue;
+        return temp.item;
     }
 
     @Override
