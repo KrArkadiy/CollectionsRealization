@@ -39,18 +39,19 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public void add(T e, int index) {
-        isCorrectIndex(index);
+       isCorrectIndex(index);
         Node<T> temp = new Node<>(null, e, null);
-        if (index == size) {
+        if(size == 0){
+            add(e);
+            size--;
+        } else if (index == 0){
             temp.prev = last;
             last.next = temp;
             last = temp;
-        } else if (index == 0) {
-            temp.next = first;
-            first.prev = temp;
+        } else if (index == size) {
+            temp.prev = last;
+            last.next = temp;
             last = temp;
-        } else if (size == 0) {
-            add(e);
         } else {
             Node<T> nodeByIndex = getNode(index);
             temp.prev = nodeByIndex.prev;
