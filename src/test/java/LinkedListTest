@@ -1,0 +1,82 @@
+import org.junit.Assert;
+import org.junit.Test;
+
+public class LinkedListTest  {
+
+    private LinkedList<String> linkedList = new LinkedList<>();
+
+    @Test
+    public void testAdd() {
+        linkedList.add("FirstValue");
+        Assert.assertEquals(1, linkedList.size());
+        linkedList.add("SecondValue");
+        Assert.assertEquals(2, linkedList.size());
+    }
+
+   // @Test
+   // public void testTestAdd() {
+   //     linkedList.add("First value");
+   //     linkedList.add("Second value", 0);
+   //     Assert.assertEquals(2, linkedList.size());
+   //     linkedList.add("Third value", 2);
+   //     Assert.assertEquals(3, linkedList.size());
+   //     linkedList.add("Fourth value", 1);
+   //     Assert.assertEquals(4, linkedList.size());
+   //     linkedList.add("Fifth value", 3);
+   //     Assert.assertEquals(5, linkedList.size());
+   //     linkedList.add("Sixth value", 4);
+   //     Assert.assertEquals(6, linkedList.size());
+   // }
+
+    @Test
+    public void testClear() {
+        Assert.assertEquals(true, linkedList.isEmpty());
+        linkedList.add("FirstValue");
+        Assert.assertEquals(false, linkedList.isEmpty());
+    }
+
+    @Test
+    public void testGet() {
+        linkedList.add("FirstValue");
+        linkedList.add("SecondValue");
+        Assert.assertEquals("FirstValue", linkedList.get(0));
+    }
+
+    @Test
+    public void testIndexOf() {
+        linkedList.add("FirstValue");
+        linkedList.add("SecondValue");
+        Assert.assertEquals(0, linkedList.indexOf("FirstValue"));
+        Assert.assertEquals(1, linkedList.indexOf("SecondValue"));
+    }
+
+    @Test
+    public void testRemove() {
+        linkedList.add("FirstValue");
+        Assert.assertEquals("FirstValue", linkedList.remove(0));
+    }
+
+    @Test
+    public void testTestRemove() {
+        linkedList.add("FirstValue");
+        linkedList.add("SecondValue");
+        Assert.assertEquals("FirstValue", linkedList.remove("FirstValue"));
+    }
+
+    @Test
+    public void testSet() {
+        linkedList.add("FirstValue");
+        linkedList.add("SecondValue");
+        Assert.assertEquals("ThirdValue", linkedList.set("ThirdValue", 0));
+    }
+
+    @Test
+    public void testSize() {
+        linkedList.add("FirstValue");
+        linkedList.add("SecondValue");
+        linkedList.add("ThirdValue");
+        Assert.assertEquals(3, linkedList.size());
+        linkedList.remove(0);
+        Assert.assertEquals(2,linkedList.size());
+    }
+}
