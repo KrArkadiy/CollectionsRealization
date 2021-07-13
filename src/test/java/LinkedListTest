@@ -13,20 +13,20 @@ public class LinkedListTest  {
         Assert.assertEquals(2, linkedList.size());
     }
 
-   // @Test
-   // public void testTestAdd() {
-   //     linkedList.add("First value");
-   //     linkedList.add("Second value", 0);
-   //     Assert.assertEquals(2, linkedList.size());
-   //     linkedList.add("Third value", 2);
-   //     Assert.assertEquals(3, linkedList.size());
-   //     linkedList.add("Fourth value", 1);
-   //     Assert.assertEquals(4, linkedList.size());
-   //     linkedList.add("Fifth value", 3);
-   //     Assert.assertEquals(5, linkedList.size());
-   //     linkedList.add("Sixth value", 4);
-   //     Assert.assertEquals(6, linkedList.size());
-   // }
+    @Test
+    public void testTestAdd() {
+        linkedList.add("First value");
+        linkedList.add("Second value", 0);
+        Assert.assertEquals(2, linkedList.size());
+        linkedList.add("Third value", 2);
+        Assert.assertEquals(3, linkedList.size());
+        linkedList.add("Fourth value", 1);
+        Assert.assertEquals(4, linkedList.size());
+        linkedList.add("Fifth value", 3);
+        Assert.assertEquals(5, linkedList.size());
+        linkedList.add("Sixth value", 4);
+        Assert.assertEquals(6, linkedList.size());
+    }
 
     @Test
     public void testClear() {
