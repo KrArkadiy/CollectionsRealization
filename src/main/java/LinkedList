@@ -4,13 +4,9 @@ public class LinkedList<T> implements List<T> {
 
     private int size;
 
-    private Node<T> first;
+    private Node<T> head;
 
     private Node<T> last;
-
-    public LinkedList() {
-        size = 0;
-    }
 
     private static class Node<T> {
         Node<T> prev;
@@ -25,26 +21,26 @@ public class LinkedList<T> implements List<T> {
     }
 
     @Override
-    public void add(T e) {
-        Node<T> l = last;
-        Node<T> newNode = new Node<>(l, e, null);
+    public void add(T value) {
+        Node<T> tempNode = last;
+        Node<T> newNode = new Node<>(tempNode, value, null);
         last = newNode;
-        if (l == null) {
-            first = newNode;
+        if (tempNode == null) {
+            head = newNode;
         } else {
-            l.next = newNode;
+            tempNode.next = newNode;
         }
         size++;
     }
 
     @Override
-    public void add(T e, int index) {
-       isCorrectIndex(index);
-        Node<T> temp = new Node<>(null, e, null);
-        if(size == 0){
-            add(e);
+    public void add(T value, int index) {
+        isCorrectIndex(index);
+        Node<T> temp = new Node<>(null, value, null);
+        if (size == 0) {
+            add(value);
             size--;
-        } else if (index == 0){
+        } else if (index == 0) {
             temp.prev = last;
             last.next = temp;
             last = temp;
@@ -64,12 +60,7 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public void clear() {
-        for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
-            tNode.item = null;
-            tNode.next = null;
-            tNode.prev = null;
-        }
-        first = last = null;
+        head = last = null;
         size = 0;
     }
 
@@ -80,18 +71,18 @@ public class LinkedList<T> implements List<T> {
     }
 
     @Override
-    public int indexOf(T e) {
+    public int indexOf(T value) {
         int index = 0;
-        if (e == null) {
-            for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
+        if (value == null) {
+            for (Node<T> tNode = head; tNode != null; tNode = tNode.next) {
                 if (tNode.item == null) {
                     return index;
                 }
                 index++;
             }
         } else {
-            for (Node<T> tNode = first; tNode != null; tNode = tNode.next) {
-                if (tNode.item.equals(e)) {
+            for (Node<T> tNode = head; tNode != null; tNode = tNode.next) {
+                if (tNode.item.equals(value)) {
                     return index;
                 }
                 index++;
@@ -104,11 +95,11 @@ public class LinkedList<T> implements List<T> {
     public T remove(int index) {
         Node<T> temp = getNode(index);
         if (size == 1) {
-            first = null;
+            head = null;
             last = null;
         } else if (index == 0) {
-            first.next.prev = null;
-            first = first.next;
+            head.next.prev = null;
+            head = head.next;
         } else if (index == size - 1) {
             last.prev.next = null;
             last = last.prev;
@@ -158,7 +149,7 @@ public class LinkedList<T> implements List<T> {
         if (size - 1 == index) {
             return last;
         }
-        Node<T> temp = first;
+        Node<T> temp = head;
         for (int i = 0; i < index; i++) {
             temp = temp.next;
         }
