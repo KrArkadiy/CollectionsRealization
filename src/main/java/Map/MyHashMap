@@ -55,11 +55,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(K key) {
         K tempKey;
+        int index = getIndexByHash(key);
         Node<K, V>[] tempArrayOfNodes = array;
-        while (tempArrayOfNodes != null && size > 0) {
-            for (Node<K, V> tempNode : tempArrayOfNodes) {
+        if (tempArrayOfNodes != null && size > 0) {
+            Node<K,V> tempNode = array[index];
                 while (tempNode != null) {
                     if ((tempKey = tempNode.key) == key || (key != null && key.equals(tempKey))) {
                         return true;
@@ -67,8 +68,6 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
                     tempNode = tempNode.next;
                 }
             }
-            return false;
-        }
         return false;
     }
 
@@ -92,9 +91,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public void replace(K key, V value) {
-        int index = getIndexByHash(key);
-        Node<K, V> tempNode = array[index];
-        tempNode.value = value;
+        if(containsKey(key)){
+            put(key, value);
+        }
     }
 
     private boolean ifMapIsEmpty() {
