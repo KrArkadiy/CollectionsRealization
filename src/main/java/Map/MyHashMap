@@ -1,0 +1,135 @@
+import java.util.Objects;
+
+public class MyHashMap<K, V> implements MyMap<K, V> {
+    private static final int INITIAL_CAPACITY = 16;
+    private static final double LOAD_FACTOR = 0.75;
+    private Node<K, V>[] array;
+    private int size;
+    private int threshold;
+
+    public MyHashMap() {
+        array = new Node[INITIAL_CAPACITY];
+        threshold = (int) (LOAD_FACTOR * INITIAL_CAPACITY);
+    }
+
+    @Override
+    public void put(K key, V value) {
+        int index = getIndexByHash(key);
+        if (array[index] == null) {
+            array[index] = new Node<>(key, value, null);
+        } else {
+            Node<K, V> tempNode = array[index];
+            while (tempNode.next != null) {
+                if (isEqual(key, tempNode.key)) {
+                    tempNode.value = value;
+                    return;
+                }
+                tempNode = tempNode.next;
+            }
+            tempNode.next = new Node<>(key, value, null);
+        }
+        if (++size > threshold) {
+            resize();
+        }
+    }
+
+    @Override
+    public V getValue(K key) {
+        if (ifMapIsEmpty()) {
+            return null;
+        }
+        int index = getIndexByHash(key);
+        Node<K, V> tempNode = array[index];
+        while (tempNode != null) {
+            if (isEqual(tempNode.key, key)) {
+                return tempNode.value;
+            }
+            tempNode = tempNode.next;
+        }
+        return null;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        K tempKey;
+        int index = getIndexByHash(key);
+        Node<K, V>[] tempArrayOfNodes = array;
+        if (tempArrayOfNodes != null && size > 0) {
+            Node<K,V> tempNode = array[index];
+                while (tempNode != null) {
+                    if ((tempKey = tempNode.key) == key || (key != null && key.equals(tempKey))) {
+                        return true;
+                    }
+                    tempNode = tempNode.next;
+                }
+            }
+        return false;
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        V tempValue;
+        Node<K, V>[] tempArrayOfNodes = array;
+        while (tempArrayOfNodes != null && size > 0) {
+            for (Node<K, V> tempNode : tempArrayOfNodes) {
+                while (tempNode != null) {
+                    if ((tempValue = tempNode.value) == value || (value != null && value.equals(tempValue))) {
+                        return true;
+                    }
+                    tempNode = tempNode.next;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void replace(K key, V value) {
+        if(containsKey(key)){
+            put(key, value);
+        }
+    }
+
+    private boolean ifMapIsEmpty() {
+        return size == 0;
+    }
+
+    private int getIndexByHash(K key) {
+        return Math.abs(key == null ? 0 : (key.hashCode()) & (INITIAL_CAPACITY - 1));
+    }
+
+    private boolean isEqual(K keyOne, K keyTwo) {
+        return Objects.equals(keyOne, keyTwo);
+    }
+
+    private void resize() {
+        size = 0;
+        Node<K, V>[] tempArray = array;
+        array = new Node[array.length * 2];
+        threshold = (int) (array.length * LOAD_FACTOR);
+        for (Node<K, V> tempNode : tempArray) {
+            while (tempNode != null) {
+                put(tempNode.key, tempNode.value);
+                tempNode = tempNode.next;
+            }
+        }
+    }
+
+    private static class Node<K, V> {
+        private K key;
+        private V value;
+        private Node<K, V> next;
+
+        public Node(K key, V value, Node<K, V> next) {
+            this.key = key;
+            this.value = value;
+            this.next = next;
+        }
+    }
+}
