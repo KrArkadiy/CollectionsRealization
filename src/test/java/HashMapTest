@@ -1,0 +1,136 @@
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class MyHashMapTest {
+
+    public static MyHashMap<String,Integer> mHM = new MyHashMap<>();
+
+    @Test
+    public void Given_hashMapWithSeveralElements_When_PutExtraElements_Then_hashMapShouldContainTheseKeysAndValues() {
+        mHM.put("SixteenthValue", 4798374);
+        mHM.put("ABC", 675);
+        mHM.put("Carmen", 414554);
+        mHM.put("Katrin", 124785);
+        mHM.put("Lady", 10099);
+        mHM.put("Sick", 21476);
+        mHM.put("AND", 11256717);
+        assertEquals(7,mHM.getSize());
+        assertTrue(mHM.containsValue(4798374));
+        assertFalse(mHM.containsValue(1111111111));
+        assertTrue(mHM.containsKey("SixteenthValue"));
+        assertFalse(mHM.containsKey(null));
+        assertTrue(mHM.containsKey("Sick"));
+        mHM.put("TenthValue", 0);
+        mHM.put("EleventhValue", 123);
+        mHM.put("TwelfthValue", 123);
+        mHM.put("ThirteenthValue", 123);
+        mHM.put("FourteenthValue", 123);
+        mHM.put("FifteenValue", null);
+        mHM.put(null, 123);
+        mHM.put("Testing", 1244444);
+        mHM.put("ThirteenthValue1", 123);
+        mHM.put("FourteenthValue2", 123);
+        mHM.put("FifteenValue3", null);
+        assertEquals(18, mHM.getSize());
+        assertTrue(mHM.containsKey("TenthValue"));
+        assertTrue(mHM.containsKey("FifteenValue"));
+        assertFalse(mHM.containsKey("Linkin"));
+    }
+
+    @Test
+    public void Given_hashMap_When_PutNewElementsWithSameKey_Then_allExceptLastElementAreCleared(){
+        mHM.put("Carmen", 414554);
+        mHM.put("Carmen", 124785);
+        mHM.put("Carmen", 10099);
+        mHM.put("Carmen", 21476);
+        mHM.put("Carmen", 11256717);
+        assertTrue(mHM.containsValue(11256717));
+        assertFalse(mHM.containsValue(21476));
+        assertFalse(mHM.containsValue(414554));
+        assertFalse(mHM.containsValue(124785));
+    }
+
+    @Test
+    public void Given_hashMap_When_getValues_Then_valuesReturn() {
+        mHM.put("TenthValue", 0);
+        mHM.put("EleventhValue", 123);
+        mHM.put("TwelfthValue", 123);
+        mHM.put("ThirteenthValue", 123);
+        mHM.put("FourteenthValue", 123);
+        mHM.put("FifteenValue", null);
+        mHM.put("SixteenthValue", 4798374);
+        mHM.put("ABC", 675);
+        mHM.put("Carmen", 414554);
+        mHM.put("Katrin", 124785);
+        mHM.put("Lady", 10099);
+        mHM.put("Sick", 21476);
+        mHM.replace("Sick", 11112);
+        mHM.put("AND", 11256717);
+        assertEquals((Object) 124785, mHM.getValue("Katrin"));
+        assertEquals((Object) 414554, mHM.getValue("Carmen"));
+        assertEquals((Object) 10099, mHM.getValue("Lady"));
+        assertNull(mHM.getValue("FifteenValue"));
+    }
+
+    @Test
+    public void Given_hashMap_When_putValues_Then_resizeAndReturnCorrectSize() {
+        mHM.put("TenthValue", 0);
+        mHM.put("EleventhValue", 123);
+        mHM.put("TwelfthValue", 123);
+        mHM.put("ThirteenthValue", 123);
+        mHM.put("FourteenthValue", 123);
+        mHM.put("FifteenValue", null);
+        mHM.put("SixteenthValue", 4798374);
+        mHM.put("ABC", 675);
+        mHM.put("Carmen", 414554);
+        mHM.put("Katrin", 124785);
+        mHM.put("Lady", 10099);
+        mHM.put("Sick", 21476);
+        mHM.put("AND", 11256717);
+        mHM.put("EleventhValue11", 12324);
+        mHM.put("TwelfthValue22", 123214);
+        mHM.put("ThirteenthValu412e", 123);
+        mHM.put("FourteenthValue124", 123);
+        mHM.put("FifteenValue124214", null);
+        mHM.put(null, 123);
+        mHM.put("Testing", 1244444);
+        mHM.put("ThirteenthValue1", 123);
+        mHM.put("FourteenthValue2", 123);
+        mHM.put("FifteenValue3", null);
+        mHM.put("SixteenthValu124e", 4798374);
+        mHM.put("ABC11", 675);
+        mHM.put("Carme11n", 414554);
+        mHM.put("Katrin12", 124785);
+        mHM.put("Lady124", 10099);
+        mHM.put("Sick1244", 21476);
+        mHM.put("AND124", 11256717);
+        assertEquals(30, mHM.getSize());
+
+    }
+
+    @Test
+    public void Given_hashMap_When_putValues_Then_correctReturnOfContainsKey() {
+        mHM.put("EleventhValue11", 12324);
+        mHM.put("TwelfthValue22", 123214);
+        mHM.put("FourteenthValue124", 123);
+        mHM.put("FifteenValue124214", null);
+        assertTrue(mHM.containsKey("FifteenValue124214"));
+        assertTrue(mHM.containsKey("FourteenthValue124"));
+        assertTrue(mHM.containsKey("FourteenthValue124"));
+        assertFalse(mHM.containsKey("213123"));
+    }
+
+    @Test
+    public void Given_hashMap_When_putValues_Then_correctReturnOfContainsValue() {
+        mHM.put("EleventhValue11", 12324);
+        mHM.put("TwelfthValue22", 123214);
+        mHM.put("FourteenthValue124", 123);
+        mHM.put("FifteenValue124214", null);
+        assertTrue(mHM.containsValue(12324));
+        assertTrue(mHM.containsValue(123));
+        assertTrue(mHM.containsValue(123214));
+        assertTrue(mHM.containsValue(null));
+        assertFalse(mHM.containsValue(123142124));
+    }
+}
