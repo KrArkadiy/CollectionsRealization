@@ -4,10 +4,51 @@ import static org.junit.Assert.*;
 
 public class MyHashMapTest {
 
-    public static MyHashMap<String,Integer> mHM = new MyHashMap<>();
+    private MyMap<String,Integer> mHM = new MyHashMap<>();
+    private MyMap<Cat, String> map = new MyHashMap<>();
+
+    private static class Cat {
+        @Override
+        public int hashCode() {
+            return 1;
+        }
+    }
 
     @Test
-    public void Given_hashMapWithSeveralElements_When_PutExtraElements_Then_hashMapShouldContainTheseKeysAndValues() {
+    public void givenHashMapWhenInitializeThenItsEmpty(){
+        assertEquals(0, mHM.getSize());
+        assertNull(mHM.getValue("123"));
+        assertFalse(mHM.containsKey("it's okey"));
+        assertFalse(mHM.containsValue(123123));
+    }
+
+    @Test
+    public void givenHashMapWhenPutElementsWithSameHashCodeThenValuesAreNotReplaced(){
+        Cat cat = new Cat();
+        Cat cat10 = new Cat();
+        map.put(cat, "Nikkobaby");
+        map.put(new Cat(), "Lola");
+        map.put(new Cat(), "Katy");
+        map.put(new Cat(), "Karma");
+        map.put(new Cat(), "Run");
+        map.put(new Cat(), "Test");
+        map.put(new Cat(), "Puff");
+        map.put(new Cat(), "Oops");
+        assertTrue(map.containsValue("Nikkobaby"));
+        assertTrue(map.containsValue("Lola"));
+        assertTrue(map.containsValue("Katy"));
+        assertTrue(map.containsValue("Karma"));
+        assertTrue(map.containsValue("Run"));
+        assertTrue(map.containsValue("Test"));
+        assertTrue(map.containsValue("Puff"));
+        assertTrue(map.containsValue("Oops"));
+        assertFalse(map.containsValue("Marta"));
+        assertFalse(map.containsKey(cat10));
+        assertEquals( "Nikkobaby", map.getValue(cat));
+    }
+
+    @Test
+    public void givenHashMapWithSeveralElementsWhenPutExtraElementsThenHashMapShouldContainTheseKeysAndValues() {
         mHM.put("SixteenthValue", 4798374);
         mHM.put("ABC", 675);
         mHM.put("Carmen", 414554);
@@ -39,9 +80,33 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void Given_hashMap_When_PutNewElementsWithSameKey_Then_allExceptLastElementAreCleared(){
+    public void givenHashMapWhenAddMoreElementsThanInitialSizeThenResize(){
+        assertEquals(0, mHM.getSize());
+        mHM.put("SixteenthValue", 4798374);
+        mHM.put("ABC", 675);
         mHM.put("Carmen", 414554);
-        mHM.put("Carmen", 124785);
+        mHM.put("Katrin", 124785);
+        mHM.put("Lady", 10099);
+        mHM.put("Sick", 21476);
+        mHM.put("AND", 11256717);
+        mHM.put("TenthValue", 0);
+        mHM.put("EleventhValue", 123);
+        mHM.put("TwelfthValue", 123);
+        mHM.put("ThirteenthValue", 123);
+        mHM.put("FourteenthValue", 123);
+        mHM.put("FifteenValue", null);
+        mHM.put(null, 123);
+        mHM.put("Testing", 1244444);
+        mHM.put("ThirteenthValue1", 123);
+        mHM.put("FourteenthValue2", 123);
+        mHM.put("FifteenValue3", null);
+        assertEquals(18, mHM.getSize());
+
+    }
+
+    @Test
+    public void givenHashMapWhenPutNewElementsWithSameKeyThenAllExceptLastElementAreCleared(){
+        mHM.put("Carmen", 414554);
         mHM.put("Carmen", 10099);
         mHM.put("Carmen", 21476);
         mHM.put("Carmen", 11256717);
@@ -52,7 +117,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void Given_hashMap_When_getValues_Then_valuesReturn() {
+    public void givenHashMapWhenGetValuesThenValuesReturn() {
         mHM.put("TenthValue", 0);
         mHM.put("EleventhValue", 123);
         mHM.put("TwelfthValue", 123);
@@ -67,14 +132,15 @@ public class MyHashMapTest {
         mHM.put("Sick", 21476);
         mHM.replace("Sick", 11112);
         mHM.put("AND", 11256717);
-        assertEquals((Object) 124785, mHM.getValue("Katrin"));
-        assertEquals((Object) 414554, mHM.getValue("Carmen"));
-        assertEquals((Object) 10099, mHM.getValue("Lady"));
+        assertEquals((Integer) 124785, mHM.getValue("Katrin"));
+        assertEquals((Integer) 414554, mHM.getValue("Carmen"));
+        assertEquals((Integer) 10099, mHM.getValue("Lady"));
         assertNull(mHM.getValue("FifteenValue"));
+        assertNull(mHM.getValue("amg"));
     }
 
     @Test
-    public void Given_hashMap_When_putValues_Then_resizeAndReturnCorrectSize() {
+    public void givenHashMapWhenPutValuesThenResizeAndReturnCorrectSize() {
         mHM.put("TenthValue", 0);
         mHM.put("EleventhValue", 123);
         mHM.put("TwelfthValue", 123);
@@ -90,7 +156,7 @@ public class MyHashMapTest {
         mHM.put("AND", 11256717);
         mHM.put("EleventhValue11", 12324);
         mHM.put("TwelfthValue22", 123214);
-        mHM.put("ThirteenthValu412e", 123);
+        mHM.put("ThirteenthValue412e", 123);
         mHM.put("FourteenthValue124", 123);
         mHM.put("FifteenValue124214", null);
         mHM.put(null, 123);
@@ -98,7 +164,7 @@ public class MyHashMapTest {
         mHM.put("ThirteenthValue1", 123);
         mHM.put("FourteenthValue2", 123);
         mHM.put("FifteenValue3", null);
-        mHM.put("SixteenthValu124e", 4798374);
+        mHM.put("SixteenthValue124e", 4798374);
         mHM.put("ABC11", 675);
         mHM.put("Carme11n", 414554);
         mHM.put("Katrin12", 124785);
@@ -106,11 +172,10 @@ public class MyHashMapTest {
         mHM.put("Sick1244", 21476);
         mHM.put("AND124", 11256717);
         assertEquals(30, mHM.getSize());
-
     }
 
     @Test
-    public void Given_hashMap_When_putValues_Then_correctReturnOfContainsKey() {
+    public void givenHashMapWhenPutValuesThenCorrectReturnOfContainsKey() {
         mHM.put("EleventhValue11", 12324);
         mHM.put("TwelfthValue22", 123214);
         mHM.put("FourteenthValue124", 123);
@@ -122,7 +187,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void Given_hashMap_When_putValues_Then_correctReturnOfContainsValue() {
+    public void givenHashMapWhenPutValuesThenCorrectReturnOfContainsValue() {
         mHM.put("EleventhValue11", 12324);
         mHM.put("TwelfthValue22", 123214);
         mHM.put("FourteenthValue124", 123);
